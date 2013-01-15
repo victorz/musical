@@ -1,0 +1,24 @@
+body {
+	font-family: Arial;
+}
+
+ul#artists {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	list-style-position: inside;
+}
+
+ul#artists li {
+	padding: 0.5em;
+	background-color: #ddd;
+}
+
+ul#artists li:nth-child(even) {
+	background-color: #ccc;
+}
+
+ul#artists li:hover {
+	color: #fff;
+	background-color: #707;
+}
