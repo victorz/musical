@@ -1,5 +1,5 @@
 window.onload = function() {
-	loadLibraryDirectory("../library", function(response) {
+	loadLibraryDirectory("library", function(response) {
 		var json = JSON.parse(response);
 		var artists = document.getElementById("artists");
 		for (var i = 0; i < json.length; i++) {
@@ -19,7 +19,7 @@ function loadLibraryDirectory(dir, callback) {
 				callback(httpRequest.response);
 			}
 		};
-		httpRequest.open("GET", "cgi-bin/library.cgi?dir=" + dir);
+		httpRequest.open("GET", "cgi-bin/library.py?dir=" + dir);
 		httpRequest.send(null);
 	}
 }
