@@ -4,7 +4,7 @@ window.onload = function() {
 		var artists = document.getElementById("artists");
 		for (var i = 0; i < json.length; i++) {
 			var item = document.createElement("li");
-			item.innerHTML = json[i];
+			item.textContent = json[i];
 			artists.appendChild(item);
 		}
 	});
