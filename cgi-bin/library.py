@@ -9,5 +9,5 @@ form = cgi.FieldStorage()
 library = None
 print("Content-type: text/html\n")
 if "dir" in form:
-    artists = os.listdir(form["dir"].value)
-    print(json.dumps(artists))
+	artists = os.listdir(form["dir"].value)
+	print(json.dumps(artists))
