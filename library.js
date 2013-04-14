@@ -2,38 +2,70 @@ var currentDir = "/";
 var playQueue = [];
 
 window.onload = function() {
-	audio = document.getElementById("audio");
-	dirButton = document.getElementById("dirbutton");
-	dirField = document.getElementById("dirfield");
-	fileList = document.getElementById("filelist");
+
+	button = document.getElementById('dirbutton');
+	audio = document.getElementById('audio');
+	dirField = document.getElementById('dirfield');
 	audio.addEventListener('ended', function() {
-		console.log('Playback has ended for song: ' + currentSong.textContent);
 		currentSong = currentSong.nextElementSibling;
 		this.src = "library/" + currentDir + "/" + currentSong.textContent;
 		console.log('Now playing: ' + currentSong.textContent);
 		this.play();
 	});
 
-	dirButton.addEventListener('click', function() {
+	button.addEventListener('click', function() {
 		currentDir = "/" + dirField.value;
-		while (fileList.childElementCount) {
-			fileList.removeChild(fileList.firstChild);
-		}
-		loadLibraryDirectory(currentDir, function(response) {
-			var json = JSON.parse(response);
-			for (var i = 0; i < json.length; i++) {
-				var listItem = document.createElement("li");
-				listItem.textContent = json[i];
-				fileList.appendChild(listItem);
-				listItem.addEventListener('click', function() {
-					audio.src = "library/" + currentDir + "/" + this.textContent;
-					currentSong = this;
-					audio.play();
-				});
-			}
-		});
+		loadLibraryDirectory(currentDir, parseJSON);
 	});
 };
+
+function parseJSON(json) {
+	var dirList = document.getElementById('dirlist');
+	var fileList = document.getElementById('filelist');
+	while (dirList.childElementCount) {
+		dirList.removeChild(dirList.firstChild);
+	}
+	while (fileList.childElementCount) {
+		fileList.removeChild(fileList.firstChild);
+	}
+	var parsedJSON = JSON.parse(json);
+	if (currentDir !== "/") {
+		var listItem = document.createElement("li");
+		listItem.textContent = "..";
+		dirList.appendChild(listItem);
+		listItem.addEventListener('click', function() {
+			// open directory
+			//currentDir = currentDir + this.textContent;
+			currentDir = currentDir.slice(0, currentDir.lastIndexOf('/'));
+			if (currentDir === "") {
+				currentDir = "/";
+			}
+			loadLibraryDirectory(currentDir, parseJSON);
+		});
+	}
+	// add parent directory list entry
+	for (var i = 0; i < parsedJSON.directories.length; i++) {
+		var listItem = document.createElement("li");
+		listItem.textContent = parsedJSON.directories[i];
+		dirList.appendChild(listItem);
+		listItem.addEventListener('click', function() {
+			// open directory
+			currentDir = currentDir + "/" + this.textContent;
+			loadLibraryDirectory(currentDir, parseJSON);
+		});
+	}
+	for (var i = 0; i < parsedJSON.files.length; i++) {
+		var listItem = document.createElement("li");
+		listItem.textContent = parsedJSON.files[i];
+		fileList.appendChild(listItem);
+		listItem.addEventListener('click', function() {
+			// play track
+			audio.src = "library/" + currentDir + "/" + this.textContent;
+			currentSong = this;
+			audio.play();
+		});
+	}
+}
 
 function loadLibraryDirectory(dir, callback) {
 	if (window.XMLHttpRequest) {

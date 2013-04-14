@@ -3,11 +3,16 @@
 import cgi
 import os
 import json
+import glob
 
 form = cgi.FieldStorage()
 
-library = None
 print("Content-type: text/html\n")
 if "dir" in form:
-	files = os.listdir("../library/" + form["dir"].value)
-	print(json.dumps(files))
+	basedir = "../library/" + form["dir"].value
+	dirlist = sorted(os.listdir(basedir))
+	directories = [d for d in dirlist if os.path.isdir(basedir + "/" + d)]
+	#files = [f for f in dirlist if not os.path.isdir(basedir + "/" + f)]
+	files = [os.path.basename(f) for f in glob.glob(basedir + "/*.mp3")]
+	jsonData = {"directories": directories, "files": files}
+	print(json.dumps(jsonData))

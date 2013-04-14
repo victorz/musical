@@ -7,13 +7,11 @@
 	</head>
 	<body>
 		<div id="page">
-			<form>
-				<label>Enter a directory:</label>
-				<input type="text" id="dirfield">
-				<input value="Load directory" type="button" id="dirbutton">
-			</form>
-			<ul id="filelist">
-			</ul>
+			<p>Enter a directory:
+			<input type="text" name="dir" id="dirfield">
+			<button id="dirbutton">Load Directory</button></p>
+			<ul class="listing" id="dirlist"></ul>
+			<ul class="listing" id="filelist"></ul>
 			<audio id="audio" controls>
 				<p>HTML audio not supported in your browser.</p>
 			</audio>

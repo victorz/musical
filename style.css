@@ -2,23 +2,23 @@ body {
 	font-family: Arial;
 }
 
-ul#filelist {
+ul.listing {
 	margin: 0;
 	padding: 0;
 	list-style-type: none;
 	list-style-position: inside;
 }
 
-ul#filelist li {
+ul.listing li {
 	padding: 0.5em;
 	background-color: #ddd;
 }
 
-ul#filelist li:nth-child(even) {
+ul.listing li:nth-child(even) {
 	background-color: #ccc;
 }
 
-ul#filelist li:hover {
+ul.listing li:hover {
 	color: #fff;
 	background-color: #707;
 }
