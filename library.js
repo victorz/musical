@@ -1,9 +1,10 @@
 var currentDir = "/";
+var currentSong;
 var playQueue = [];
 
 window.onload = function() {
 
-	button = document.getElementById('dirbutton');
+	loadButton = document.getElementById('load-button');
 	audio = document.getElementById('audio');
 	dirField = document.getElementById('dirfield');
 	audio.addEventListener('ended', function() {
@@ -13,7 +14,7 @@ window.onload = function() {
 		this.play();
 	});
 
-	button.addEventListener('click', function() {
+	loadButton.addEventListener('click', function() {
 		currentDir = "/" + dirField.value;
 		loadLibraryDirectory(currentDir, parseJSON);
 	});
@@ -35,7 +36,6 @@ function parseJSON(json) {
 		dirList.appendChild(listItem);
 		listItem.addEventListener('click', function() {
 			// open directory
-			//currentDir = currentDir + this.textContent;
 			currentDir = currentDir.slice(0, currentDir.lastIndexOf('/'));
 			if (currentDir === "") {
 				currentDir = "/";
