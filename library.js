@@ -18,6 +18,9 @@ window.onload = function() {
 		currentDir = "/" + dirField.value;
 		loadLibraryDirectory(currentDir, parseJSON);
 	});
+
+	// load library on page load
+	loadLibraryDirectory(currentDir, parseJSON);
 };
 
 function parseJSON(json) {
