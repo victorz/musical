@@ -8,7 +8,9 @@ window.onload = function() {
 	audio = document.getElementById('audio');
 	dirField = document.getElementById('dirfield');
 	audio.addEventListener('ended', function() {
+		currentSong.classList.remove("playing");
 		currentSong = currentSong.nextElementSibling;
+		currentSong.classList.add("playing");
 		this.src = "library/" + currentDir + "/" + currentSong.textContent;
 		console.log('Now playing: ' + currentSong.textContent);
 		this.play();
@@ -64,7 +66,11 @@ function parseJSON(json) {
 		listItem.addEventListener('click', function() {
 			// play track
 			audio.src = "library/" + currentDir + "/" + this.textContent;
+			if (currentSong) {
+				currentSong.classList.remove("playing");
+			}
 			currentSong = this;
+			currentSong.classList.add("playing");
 			audio.play();
 		});
 	}

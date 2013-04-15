@@ -22,3 +22,8 @@ ul.listing li:hover {
 	color: #fff;
 	background-color: #707;
 }
+
+.playing {
+	color: #000;
+	background-color: #0a0 !important;
+}
