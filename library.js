@@ -1,22 +1,35 @@
 var currentDir = "/";
-var currentSong;
+var currentTrack;
 var playQueue = [];
 
 window.onload = function() {
 
-	loadButton = document.getElementById('load-button');
-	audio = document.getElementById('audio');
-	dirField = document.getElementById('dirfield');
-	audio.addEventListener('ended', function() {
-		currentSong.classList.remove("playing");
-		currentSong = currentSong.nextElementSibling;
-		currentSong.classList.add("playing");
-		this.src = "library/" + currentDir + "/" + currentSong.textContent;
-		console.log('Now playing: ' + currentSong.textContent);
-		this.play();
+	loadButton = document.getElementById("load-button");
+	audio = document.getElementById("audio");
+	audio.volume = 0.1;
+	dirField = document.getElementById("dirfield");
+	previousButton = document.querySelector("#controls #previous");
+	playButton = document.querySelector("#controls #play");
+	nextButton = document.querySelector("#controls #next");
+	playButton.addEventListener("click", function() {
+		if (!currentTrack) {
+			currentTrack = document.querySelector("#entrylist .file");
+			if (currentTrack) {
+				setNewTrackAsPlaying(currentTrack);
+			}
+		} else if (audio.paused && currentTrack) {
+			audio.play();
+			this.textContent = "Pause";
+		} else {
+			audio.pause();
+			this.textContent = "Play";
+		}
 	});
+	previousButton.addEventListener("click", previousTrack);
+	nextButton.addEventListener("click", nextTrack);
+	audio.addEventListener("ended", nextTrack);
 
-	loadButton.addEventListener('click', function() {
+	loadButton.addEventListener("click", function() {
 		currentDir = "/" + dirField.value;
 		loadLibraryDirectory(currentDir, parseJSON);
 	});
@@ -25,35 +38,63 @@ window.onload = function() {
 	loadLibraryDirectory(currentDir, parseJSON);
 };
 
-function parseJSON(json) {
-	var dirList = document.getElementById('dirlist');
-	var fileList = document.getElementById('filelist');
-	while (dirList.childElementCount) {
-		dirList.removeChild(dirList.firstChild);
+function setNewTrackAsPlaying(newTrack) {
+	if (currentTrack) {
+		currentTrack.classList.remove("playing");
 	}
-	while (fileList.childElementCount) {
-		fileList.removeChild(fileList.firstChild);
+	if (newTrack && newTrack.classList.contains("file")) {
+		newTrack.classList.add("playing");
+		audio.src = "library/" + currentDir + "/" + newTrack.textContent;
+		console.log("Now playing: " + newTrack.textContent);
+		audio.play();
+		playButton.textContent = "Pause";
+	} else {
+		audio.pause();
+		audio.src = "";
+		playButton.textContent = "Play";
+	}
+	currentTrack = newTrack;
+}
+
+function nextTrack() {
+	if (currentTrack) {
+		setNewTrackAsPlaying(currentTrack.nextElementSibling);
+	}
+}
+
+function previousTrack() {
+	if (currentTrack) {
+		setNewTrackAsPlaying(currentTrack.previousElementSibling);
+	}
+}
+
+function parseJSON(json) {
+	var entryList = document.getElementById("entrylist");
+	while (entryList.childElementCount) {
+		entryList.removeChild(entryList.firstChild);
 	}
 	var parsedJSON = JSON.parse(json);
+	// add parent directory list entry if not at the root directory
 	if (currentDir !== "/") {
 		var listItem = document.createElement("li");
 		listItem.textContent = "..";
-		dirList.appendChild(listItem);
-		listItem.addEventListener('click', function() {
+		listItem.classList.add("directory");
+		entryList.appendChild(listItem);
+		listItem.addEventListener("click", function() {
 			// open directory
-			currentDir = currentDir.slice(0, currentDir.lastIndexOf('/'));
+			currentDir = currentDir.slice(0, currentDir.lastIndexOf("/"));
 			if (currentDir === "") {
 				currentDir = "/";
 			}
 			loadLibraryDirectory(currentDir, parseJSON);
 		});
 	}
-	// add parent directory list entry
 	for (var i = 0; i < parsedJSON.directories.length; i++) {
 		var listItem = document.createElement("li");
 		listItem.textContent = parsedJSON.directories[i];
-		dirList.appendChild(listItem);
-		listItem.addEventListener('click', function() {
+		listItem.classList.add("directory");
+		entryList.appendChild(listItem);
+		listItem.addEventListener("click", function() {
 			// open directory
 			currentDir = currentDir + "/" + this.textContent;
 			loadLibraryDirectory(currentDir, parseJSON);
@@ -62,16 +103,10 @@ function parseJSON(json) {
 	for (var i = 0; i < parsedJSON.files.length; i++) {
 		var listItem = document.createElement("li");
 		listItem.textContent = parsedJSON.files[i];
-		fileList.appendChild(listItem);
-		listItem.addEventListener('click', function() {
-			// play track
-			audio.src = "library/" + currentDir + "/" + this.textContent;
-			if (currentSong) {
-				currentSong.classList.remove("playing");
-			}
-			currentSong = this;
-			currentSong.classList.add("playing");
-			audio.play();
+		listItem.classList.add("file");
+		entryList.appendChild(listItem);
+		listItem.addEventListener("click", function() {
+			setNewTrackAsPlaying(this);
 		});
 	}
 }
