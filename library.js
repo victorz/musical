@@ -30,12 +30,12 @@ window.onload = function() {
 	audio.addEventListener("ended", nextTrack);
 
 	loadButton.addEventListener("click", function() {
-		currentDir = "/" + dirField.value;
-		loadLibraryDirectory(currentDir, parseJSON);
+		var dir = "/" + dirField.value;
+		loadLibraryDirectory(dir, parseJSON, {"dir": dir});
 	});
 
 	// load library on page load
-	loadLibraryDirectory(currentDir, parseJSON);
+	loadLibraryDirectory("/", parseJSON, {"dir": "/"});
 };
 
 function setNewTrackAsPlaying(newTrack) {
@@ -68,12 +68,17 @@ function previousTrack() {
 	}
 }
 
-function parseJSON(json) {
+function parseJSON(json, callbackArgs) {
+	var parsedJSON = JSON.parse(json);
+	if (parsedJSON.status !== "OK") {
+		alert("Error: " + parsedJSON.error);
+		return;
+	}
+	currentDir = callbackArgs.dir;
 	var entryList = document.getElementById("entrylist");
 	while (entryList.childElementCount) {
 		entryList.removeChild(entryList.firstChild);
 	}
-	var parsedJSON = JSON.parse(json);
 	// add parent directory list entry if not at the root directory
 	if (currentDir !== "/") {
 		var listItem = document.createElement("li");
@@ -82,11 +87,11 @@ function parseJSON(json) {
 		entryList.appendChild(listItem);
 		listItem.addEventListener("click", function() {
 			// open directory
-			currentDir = currentDir.slice(0, currentDir.lastIndexOf("/"));
-			if (currentDir === "") {
-				currentDir = "/";
+			var dir = currentDir.slice(0, currentDir.lastIndexOf("/"));
+			if (dir === "") {
+				dir = "/";
 			}
-			loadLibraryDirectory(currentDir, parseJSON);
+			loadLibraryDirectory(dir, parseJSON, {"dir": dir});
 		});
 	}
 	for (var i = 0; i < parsedJSON.directories.length; i++) {
@@ -96,8 +101,8 @@ function parseJSON(json) {
 		entryList.appendChild(listItem);
 		listItem.addEventListener("click", function() {
 			// open directory
-			currentDir = currentDir + "/" + this.textContent;
-			loadLibraryDirectory(currentDir, parseJSON);
+			var dir = currentDir + "/" + this.textContent;
+			loadLibraryDirectory(dir, parseJSON, {"dir": dir});
 		});
 	}
 	for (var i = 0; i < parsedJSON.files.length; i++) {
@@ -111,12 +116,12 @@ function parseJSON(json) {
 	}
 }
 
-function loadLibraryDirectory(dir, callback) {
+function loadLibraryDirectory(dir, callback, callbackArgs) {
 	if (window.XMLHttpRequest) {
 		var httpRequest = new XMLHttpRequest();
 		httpRequest.onreadystatechange = function() {
 			if (httpRequest.readyState === 4 && httpRequest.status === 200) {
-				callback(httpRequest.response);
+				callback(httpRequest.response, callbackArgs);
 			}
 		};
 		httpRequest.open("GET", "cgi-bin/library.py?dir=" + dir, true);
