@@ -1,20 +1,22 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>Victor's Music Library</title>
 		<link rel="stylesheet" href="style.css">
-		<script type="text/javascript" src="library.js"></script>
+		<script src="library.js"></script>
 	</head>
 	<body>
-		<p>Enter directory:
-		<input type="text" name="dir" id="dirfield">
-		<button id="load-button">Load Directory</button> (empty directory loads entire library)</p>
+		<div id="loadform">
+			Enter directory:
+			<input type="text" name="dir" id="dirfield" placeholder="all artists">
+			<input type="button" id="loadbutton" value="Load">
+		</div>
 		<ul class="listing" id="entrylist"></ul>
 		<audio id="audio">
-		<p>HTML audio not supported in your browser. (Try <a href="http://www.google.com/chrome">Google Chrome</a>?)</p>
+			<p>HTML audio not supported in your browser.</p>
 		</audio>
 		<div id="controls">
-			<div id="previous">Previous</div>
+			<div id="prev">Previous</div>
 			<div id="play">Play</div>
 			<div id="next">Next</div>
 		</div>

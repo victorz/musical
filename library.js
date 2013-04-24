@@ -3,12 +3,11 @@ var currentTrack;
 var playQueue = [];
 
 window.onload = function() {
-
-	loadButton = document.getElementById("load-button");
+	loadButton = document.getElementById("loadbutton");
 	audio = document.getElementById("audio");
 	audio.volume = 0.1;
 	dirField = document.getElementById("dirfield");
-	previousButton = document.querySelector("#controls #previous");
+	prevButton = document.querySelector("#controls #prev");
 	playButton = document.querySelector("#controls #play");
 	nextButton = document.querySelector("#controls #next");
 	playButton.addEventListener("click", function() {
@@ -25,7 +24,7 @@ window.onload = function() {
 			this.textContent = "Play";
 		}
 	});
-	previousButton.addEventListener("click", previousTrack);
+	prevButton.addEventListener("click", previousTrack);
 	nextButton.addEventListener("click", nextTrack);
 	audio.addEventListener("ended", nextTrack);
 
