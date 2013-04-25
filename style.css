@@ -6,7 +6,7 @@ body {
 }
 
 ul.listing {
-	margin-bottom: 3em;
+	margin-bottom: 6em;
 	padding: 0;
 	list-style-type: none;
 	list-style-position: inside;
@@ -50,6 +50,10 @@ ul.listing li:hover {
 #controls div#prev, #controls div#next { width: 33%; }
 
 #controls div#play { width: 34%; }
+
+#controls input#seek {
+	width: 100%;
+}
 
 #loadform {
 	width: 100%;

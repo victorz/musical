@@ -1,59 +1,69 @@
+const baseDir = "library/";
 var currentDir = "/";
 var currentTrack;
-var playQueue = [];
+//var playQueue = [];
 
 window.onload = function() {
 	loadButton = document.getElementById("loadbutton");
 	audio = document.getElementById("audio");
-	audio.volume = 0.1;
+	//audio.volume = 0.1;
 	dirField = document.getElementById("dirfield");
 	prevButton = document.querySelector("#controls #prev");
 	playButton = document.querySelector("#controls #play");
 	nextButton = document.querySelector("#controls #next");
+	seekSlider = document.getElementById("seek");
 	playButton.addEventListener("click", function() {
 		if (!currentTrack) {
 			currentTrack = document.querySelector("#entrylist .file");
 			if (currentTrack) {
 				setNewTrackAsPlaying(currentTrack);
 			}
-		} else if (audio.paused && currentTrack) {
+		} else if (audio.paused) {
 			audio.play();
-			this.textContent = "Pause";
 		} else {
 			audio.pause();
-			this.textContent = "Play";
 		}
 	});
 	prevButton.addEventListener("click", previousTrack);
 	nextButton.addEventListener("click", nextTrack);
-	audio.addEventListener("ended", nextTrack);
 
 	loadButton.addEventListener("click", function() {
 		var dir = "/" + dirField.value;
 		loadLibraryDirectory(dir, parseJSON, {"dir": dir});
 	});
 
+	audio.addEventListener("ended", nextTrack);
+
+	audio.addEventListener("play", function() {
+		playButton.textContent = "Pause";
+	});
+
+	audio.addEventListener("pause", function() {
+		playButton.textContent = "Play";
+	});
+
+	audio.addEventListener("timeupdate", function() {
+		seekSlider.value = audio.currentTime / audio.duration;
+	});
+
+	seekSlider.addEventListener("mousedown", function() {
+		if (!audio.paused) {
+			audio.pause();
+			audio.wasJustPlaying = true;
+		}
+	});
+
+	seekSlider.addEventListener("mouseup", function() {
+		audio.currentTime = seekSlider.value * (audio.duration ? audio.duration : 0);
+		if (audio.wasJustPlaying) {
+			audio.play();
+			audio.wasJustPlaying = false;
+		}
+	});
+
 	// load library on page load
 	loadLibraryDirectory("/", parseJSON, {"dir": "/"});
 };
-
-function setNewTrackAsPlaying(newTrack) {
-	if (currentTrack) {
-		currentTrack.classList.remove("playing");
-	}
-	if (newTrack && newTrack.classList.contains("file")) {
-		newTrack.classList.add("playing");
-		audio.src = "library/" + currentDir + "/" + newTrack.textContent;
-		console.log("Now playing: " + newTrack.textContent);
-		audio.play();
-		playButton.textContent = "Pause";
-	} else {
-		audio.pause();
-		audio.src = "";
-		playButton.textContent = "Play";
-	}
-	currentTrack = newTrack;
-}
 
 function nextTrack() {
 	if (currentTrack) {
@@ -64,6 +74,19 @@ function nextTrack() {
 function previousTrack() {
 	if (currentTrack) {
 		setNewTrackAsPlaying(currentTrack.previousElementSibling);
+	}
+}
+
+function setNewTrackAsPlaying(newTrack) {
+	if (currentTrack) {
+		currentTrack.classList.remove("playing");
+	}
+	if (newTrack && newTrack.classList.contains("file")) {
+		newTrack.classList.add("playing");
+		audio.src = baseDir + currentDir + "/" + newTrack.textContent;
+		console.log("Now playing: " + newTrack.textContent);
+		currentTrack = newTrack;
+		audio.play();
 	}
 }
 
