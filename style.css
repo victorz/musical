@@ -75,11 +75,11 @@ ul.listing li:hover {
 @media screen {
 	body { font-size: 12pt; }
 	ul.listing { margin-top: 3em; }
-	#loadform { display: inherit; }
+	#loadform, #seek { display: inherit; }
 }
 
 @media screen and (max-device-width: 800px) and (orientation: portrait) {
 	body { font-size: 32pt; }
 	ul.listing { margin-top: 0; }
-	#loadform { display: none; }
+	#loadform, #seek { display: none; }
 }
