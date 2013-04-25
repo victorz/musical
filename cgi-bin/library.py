@@ -7,7 +7,6 @@ import glob
 
 form = cgi.FieldStorage()
 
-print("Content-type: text/html\n")
 if "dir" in form:
 	jsonData = dict();
 	if ".." in form["dir"].value:
@@ -22,4 +21,5 @@ if "dir" in form:
 		jsonData["status"] = "OK"
 		jsonData["directories"] = sorted(directories)
 		jsonData["files"] = sorted(files)
+	print("Content-type: text/html;charset=utf-8\n")
 	print(json.dumps(jsonData))
