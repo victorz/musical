@@ -11,6 +11,10 @@
 			Enter directory:
 			<input type="text" name="dir" id="dirfield" placeholder="all artists">
 			<input type="button" id="loadbutton" value="Load">
+			<input type="range" id="volume" list="volumenotches" value="1" max="1" step="0.01">
+			<datalist id="volumenotches">
+				<option value="0.5">
+			</datalist>
 		</div>
 		<ul class="listing" id="entrylist"></ul>
 		<audio id="audio">

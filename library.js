@@ -6,7 +6,10 @@ var currentTrack;
 window.onload = function() {
 	loadButton = document.getElementById("loadbutton");
 	audio = document.getElementById("audio");
-	//audio.volume = 0.1;
+	var volume = document.getElementById("volume");
+	volume.addEventListener("change", function () {
+		audio.volume = volume.value;
+	});
 	dirField = document.getElementById("dirfield");
 	prevButton = document.querySelector("#controls #prev");
 	playButton = document.querySelector("#controls #play");
