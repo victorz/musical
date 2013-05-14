@@ -6,13 +6,10 @@ html, body {
 	padding: 0;
 	width: 100%;
 	height: 100%;
-	text-shadow: 0 0 .5em;
+	text-shadow: 0 0 .5em #fff;
 }
 
-li {
-	list-style-type: none;
-	list-style-position: outside;
-}
+li { list-style-type: none; }
 
 #topbar {
 	padding: 1em;
@@ -21,10 +18,7 @@ li {
 	border-bottom: .25em solid #707;
 }
 
-#volume-bar {
-	display: block;
-}
-
+#volume-bar { display: block; }
 #volume-controls { float: left; }
 #playback-controls {
 	float: right;
