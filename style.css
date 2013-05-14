@@ -1,86 +1,65 @@
-body {
-	/* TODO: adapt style to medium/device */
+html, body {
 	font-family: sans-serif;
+	color: #fff;
+	background-color: #000;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	text-shadow: 0 0 .5em;
+}
+
+li {
+	list-style-type: none;
+	list-style-position: outside;
+}
+
+#topbar {
+	padding: 1em;
+	height: 5em;
+	margin: 0;
+	border-bottom: .25em solid #707;
+}
+
+#volume-bar {
+	display: block;
+}
+
+#volume-controls { float: left; }
+#playback-controls {
+	float: right;
+	text-align: center;
+}
+
+ul {
 	margin: 0;
 	padding: 0;
 }
 
-ul.listing {
-	margin-bottom: 6em;
-	padding: 0;
-	list-style-type: none;
-	list-style-position: inside;
-}
-
-ul.listing li {
+.librarylist li:nth-child(even) { background-color: #000; }
+.librarylist li {
 	padding: 1em;
-	background-color: #eee;
+	background-color: #222;
 }
 
-ul.listing li:nth-child(even) { background-color: #ddd; }
+#library {
+	height: calc(100% - 7.25em);
+	overflow-y: auto;
+}
 
-ul.listing li:hover {
-	color: #fff;
-	background-color: #229 !important;
+#playback-controls ul li:first-child { margin-left: 0; }
+#playback-controls ul li {
+	display: inline-block;
+	width: 3.5em;
+	height: 2.5em;
+	overflow: hidden; /* TODO: remove */
+	margin-left: 1em;
+	background-color: #00f;
 }
 
 .playing {
-	color: #fff !important;
-	background-color: #707 !important;
-}
-
-#controls {
-	text-align: center;
-	text-shadow: 0 0 1em #fff;
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	color: #fff;
-	background-color: #333;
-	opacity: 0.9;
-}
-
-#controls > div {
-	padding-top: 1em;
-	padding-bottom: 1em;
-	float: left;
-	box-shadow: inset 0 0 10px 10px #00f;
-}
-
-#controls div#prev, #controls div#next { width: 33%; }
-
-#controls div#play { width: 34%; }
-
-#controls input#seek {
-	width: 100%;
-}
-
-#loadform {
-	width: 100%;
-	width: -webkit-calc(100% - 1em);
-	width: calc(100% - 1em);
-	position: fixed;
-	top: 0;
-	left: 0;
-	padding: 1em 0 1em 1em;
-	background-color: #fff;
-}
-
-#load-button, #dirfield {
-	margin: 0;
-	padding: 0;
-}
-#loadbutton { height: 17px; }
-
-@media screen {
-	body { font-size: 12pt; }
-	ul.listing { margin-top: 3em; }
-	#loadform, #seek { display: inherit; }
-}
-
-@media screen and (max-device-width: 800px) and (orientation: portrait) {
-	body { font-size: 32pt; }
-	ul.listing { margin-top: 0; }
-	#loadform, #seek { display: none; }
+	color: #000;
+	font-weight: bold;
+	background-color: #ff0 !important;
+	text-shadow: 0 0 .5em #000;
 }

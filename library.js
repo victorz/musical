@@ -4,20 +4,19 @@ var currentTrack;
 //var playQueue = [];
 
 window.onload = function() {
-	loadButton = document.getElementById("loadbutton");
 	audio = document.getElementById("audio");
-	var volume = document.getElementById("volume");
+	var volume = document.getElementById("volume-bar");
 	volume.addEventListener("change", function () {
 		audio.volume = volume.value;
 	});
 	dirField = document.getElementById("dirfield");
-	prevButton = document.querySelector("#controls #prev");
-	playButton = document.querySelector("#controls #play");
-	nextButton = document.querySelector("#controls #next");
+	prevButton = document.getElementById("prev");
+	playButton = document.getElementById("play");
+	nextButton = document.getElementById("next");
 	seekSlider = document.getElementById("seek");
 	playButton.addEventListener("click", function() {
 		if (!currentTrack) {
-			currentTrack = document.querySelector("#entrylist .file");
+			currentTrack = document.querySelector(".librarylist .file");
 			if (currentTrack) {
 				setNewTrackAsPlaying(currentTrack);
 			}
@@ -29,11 +28,6 @@ window.onload = function() {
 	});
 	prevButton.addEventListener("click", previousTrack);
 	nextButton.addEventListener("click", nextTrack);
-
-	loadButton.addEventListener("click", function() {
-		var dir = "/" + dirField.value;
-		loadLibraryDirectory(dir, parseJSON, {"dir": dir});
-	});
 
 	audio.addEventListener("ended", nextTrack);
 
@@ -57,8 +51,8 @@ window.onload = function() {
 	});
 
 	seekSlider.addEventListener("mouseup", function() {
-		audio.currentTime = seekSlider.value * (audio.duration ? audio.duration : 0);
 		if (audio.wasJustPlaying) {
+			audio.currentTime = seekSlider.value * (audio.duration ? audio.duration : 0);
 			audio.play();
 			audio.wasJustPlaying = false;
 		}
@@ -100,7 +94,7 @@ function parseJSON(json, callbackArgs) {
 		return;
 	}
 	currentDir = callbackArgs.dir;
-	var entryList = document.getElementById("entrylist");
+	var entryList = document.getElementById("librarylist");
 	while (entryList.childElementCount) {
 		entryList.removeChild(entryList.firstChild);
 	}
