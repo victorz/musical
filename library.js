@@ -74,6 +74,22 @@ window.onload = function() {
 			case 76: // 'l'
 				audio.currentTime += 10;
 				break;
+			case 38: // up arrow
+				if (audio.volume > 0.95) {
+					audio.volume = 1;
+				} else {
+					audio.volume += 0.05;
+				}
+				volume.value = audio.volume;
+				break;
+			case 40: // down arrow
+				if (audio.volume < 0.05) {
+					audio.volume = 0;
+				} else {
+					audio.volume -= 0.05;
+				}
+				volume.value = audio.volume;
+				break;
 		}
 	});
 
