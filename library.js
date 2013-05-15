@@ -60,7 +60,6 @@ window.onload = function() {
 
 	// Add keyboard shortcuts.
 	window.addEventListener('keydown', function(e) {
-		console.log("keydown event happened: " + e.keyCode);
 		switch (e.keyCode) {
 			case 75: // 'k'
 				if (audio.paused) {
