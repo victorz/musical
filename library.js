@@ -58,6 +58,26 @@ window.onload = function() {
 		}
 	});
 
+	// Add keyboard shortcuts.
+	window.addEventListener('keydown', function(e) {
+		console.log("keydown event happened: " + e.keyCode);
+		switch (e.keyCode) {
+			case 75: // 'k'
+				if (audio.paused) {
+					audio.play();
+				} else {
+					audio.pause();
+				}
+				break;
+			case 74: // 'j'
+				audio.currentTime -= 10;
+				break;
+			case 76: // 'l'
+				audio.currentTime += 10;
+				break;
+		}
+	});
+
 	// load library on page load
 	loadLibraryDirectory("/", parseJSON, {"dir": "/"});
 };
