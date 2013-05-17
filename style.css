@@ -36,6 +36,13 @@ ul {
 	background-color: #222;
 }
 
+.librarylist li:hover { cursor: pointer; }
+.librarylist li:active {
+	color: #000;
+	background-color: #aaa;
+	box-shadow: 0 0 5px 5px #aaa;
+}
+
 #library {
 	height: calc(100% - 7.25em);
 	overflow-y: auto;
@@ -53,7 +60,6 @@ ul {
 
 .playing {
 	color: #000;
-	font-weight: bold;
 	background-color: #ff0 !important;
 	text-shadow: 0 0 .5em #000;
 }
