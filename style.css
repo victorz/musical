@@ -37,11 +37,14 @@ ul {
 }
 
 .librarylist li:hover { cursor: pointer; }
+/* TODO: find a way to make only the subtree present feedback
+ * from clicking/tapping.
 .librarylist li:active {
 	color: #000;
 	background-color: #aaa;
 	box-shadow: 0 0 5px 5px #aaa;
 }
+*/
 
 #library {
 	height: calc(100% - 7.25em);

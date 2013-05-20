@@ -16,7 +16,6 @@ if "dir" in form:
 		basedir = "../library/" + form["dir"].value
 		dirlist = os.listdir(basedir)
 		directories = [d for d in dirlist if os.path.isdir(basedir + "/" + d)]
-		#files = [f for f in dirlist if not os.path.isdir(basedir + "/" + f)]
 		files = [os.path.basename(f) for f in glob.glob(basedir + "/*.mp3")]
 		jsonData["status"] = "OK"
 		jsonData["directories"] = sorted(directories)
