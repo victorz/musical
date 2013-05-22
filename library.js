@@ -140,10 +140,15 @@ function playNextSong(e) {
 	}
 }
 
+function changeVolume(e) {
+	audio.volume = e.target.value;
+}
+
 function setupPlaybackControls(controls) {
 	controls.playButton.addEventListener("click", togglePause);
 	controls.prevButton.addEventListener("click", playPrevSong);
 	controls.nextButton.addEventListener("click", playNextSong);
+	controls.volumeControl.addEventListener("change", changeVolume);
 }
 
 window.addEventListener("load", function() {
@@ -152,7 +157,8 @@ window.addEventListener("load", function() {
 	controls = {
 		playButton: document.getElementById("play"),
 		prevButton: document.getElementById("prev"),
-		nextButton: document.getElementById("next")
+		nextButton: document.getElementById("next"),
+		volumeControl: document.getElementById("volume-slider")
 	}
 	setupPlaybackControls(controls);
 
