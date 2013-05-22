@@ -1,3 +1,5 @@
+var currentSong = null;
+
 function loadLibraryDirectory(dir, callback, callbackArgs) {
 	if (window.XMLHttpRequest) {
 		var httpRequest = new XMLHttpRequest();
@@ -26,7 +28,7 @@ function listElementsFromArray(array) {
 	return elements;
 }
 
-function populateList(list, elements) {
+function fillList(list, elements) {
 	for (var i = 0; i < elements.length; i++) {
 		list.appendChild(elements[i]);
 	}
@@ -65,7 +67,7 @@ function directoryClicked(e) {
 }
 
 function fileClicked(e) {
-	playFile(e.target.parentNode.getAttribute("data-path") + "/" + e.target.textContent)
+	playFile(e.target);
 	e.stopPropagation();
 }
 
@@ -80,21 +82,80 @@ function handleJSONData(data, args) {
 	var files = listElementsFromArray(json.files);
 	if (directories && directories.length) {
 		addEventListeners(directories, directoryClicked, "click");
-		populateList(args.list, directories);
+		fillList(args.list, directories);
+		for (var i = 0; i < directories.length; i++) {
+			directories[i].classList.add("directory");
+		}
 	}
 	if (files && files.length) {
 		addEventListeners(files, fileClicked, "click");
-		populateList(args.list, files);
+		fillList(args.list, files);
+		for (var i = 0; i < files.length; i++) {
+			files[i].classList.add("file");
+		}
 	}
 }
 
-function playFile(path) {
-	audio.src = "library" + path;
+function pauseAudio() {
+	audio.pause();
+	controls.playButton.textContent = "Play";
+}
+
+function playAudio() {
+	if (audio.src) {
+		audio.play();
+		controls.playButton.textContent = "Pause";
+	}
+}
+
+function playFile(li) {
+	if (currentSong) {
+		currentSong.classList.remove("playing");
+	}
+	li.classList.add("playing");
+	audio.src = "library" + li.parentNode.getAttribute("data-path") + "/" + li.textContent;
 	audio.play();
+	currentSong = li;
+}
+
+function togglePause(e) {
+	if (audio.paused) {
+		playAudio();
+	} else {
+		pauseAudio();
+	}
+}
+
+function playPrevSong(e) {
+	var prevSong = currentSong.previousSibling;
+	if (currentSong && prevSong && prevSong.classList.contains("file")) {
+		playFile(prevSong);
+	}
+}
+
+function playNextSong(e) {
+	var nextSong = currentSong.nextSibling;
+	if (currentSong && nextSong && nextSong.classList.contains("file")) {
+		playFile(nextSong);
+	}
+}
+
+function setupPlaybackControls(controls) {
+	controls.playButton.addEventListener("click", togglePause);
+	controls.prevButton.addEventListener("click", playPrevSong);
+	controls.nextButton.addEventListener("click", playNextSong);
 }
 
 window.addEventListener("load", function() {
 	audio = document.getElementById("audio");
+	audio.addEventListener("ended", playNextSong);
+	controls = {
+		playButton: document.getElementById("play"),
+		prevButton: document.getElementById("prev"),
+		nextButton: document.getElementById("next")
+	}
+	setupPlaybackControls(controls);
+
 	var libraryList = document.getElementById("librarylist");
 	var callbackArgs = { list: libraryList };
 	loadLibraryDirectory("/", handleJSONData, callbackArgs);
