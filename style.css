@@ -9,11 +9,6 @@ html, body {
 	text-shadow: 0 0 .5em #fff;
 }
 
-ul {
-	margin: 0;
-	padding: 0;
-}
-
 li { list-style-type: none; }
 
 #topbar {
@@ -30,27 +25,6 @@ li { list-style-type: none; }
 	text-align: center;
 }
 
-ul.librarylist li:hover { cursor: pointer; }
-ul.librarylist li:nth-child(even) { background-color: #000; }
-ul.librarylist li {
-	padding: 1em;
-	background-color: #222;
-}
-
-ul.librarylist {
-	margin-top: 1em;
-	box-shadow: 0 0 5px 5px #007;
-}
-ul#librarylist {
-	margin-top: 0;
-	box-shadow: none;
-}
-
-#library {
-	height: calc(100% - 7.25em);
-	overflow-y: auto;
-}
-
 #playback-controls ul li:first-child { margin-left: 0; }
 #playback-controls ul li {
 	display: inline-block;
@@ -58,11 +32,36 @@ ul#librarylist {
 	height: 2.5em;
 	overflow: hidden; /* TODO: remove */
 	margin-left: 1em;
-	background-color: #00f;
+	background-color: #707;
+}
+
+ul.librarylist li {
+	cursor: pointer;
+	padding: 1em;
+	margin: 0;
+}
+
+ul.librarylist {
+	margin-top: 1em;
+	padding: 0;
+	border-left: .25em solid #707;
+}
+ul#librarylist {
+	margin-top: 0;
+	border: none;
+}
+
+#library {
+	height: calc(100% - 7.25em);
+	overflow-y: auto;
 }
 
 .playing {
 	color: #000;
 	background-color: #ff0 !important;
 	text-shadow: 0 0 .5em #000;
+}
+
+.open {
+	border-left: .25em solid #070;
 }

@@ -57,11 +57,11 @@ function openDir(dir) {
 
 function directoryClicked(e) {
 	if (e.target.classList.contains("open")) {
-		e.target.classList.remove("open");
 		closeDir(e.target);
+		e.target.classList.remove("open");
 	} else {
-		e.target.classList.add("open");
 		openDir(e.target);
+		e.target.classList.add("open");
 	}
 	e.stopPropagation();
 }
