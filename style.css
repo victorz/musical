@@ -33,6 +33,7 @@ li { list-style-type: none; }
 	overflow: hidden; /* TODO: remove */
 	margin-left: 1em;
 	background-color: #707;
+	cursor: pointer;
 }
 
 ul.librarylist li {

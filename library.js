@@ -127,14 +127,18 @@ function togglePause(e) {
 }
 
 function playPrevSong(e) {
-	var prevSong = currentSong.previousSibling;
+	if (currentSong) {
+		var prevSong = currentSong.previousSibling;
+	}
 	if (currentSong && prevSong && prevSong.classList.contains("file")) {
 		playFile(prevSong);
 	}
 }
 
 function playNextSong(e) {
-	var nextSong = currentSong.nextSibling;
+	if (currentSong) {
+		var nextSong = currentSong.nextSibling;
+	}
 	if (currentSong && nextSong && nextSong.classList.contains("file")) {
 		playFile(nextSong);
 	}
@@ -145,20 +149,31 @@ function changeVolume(e) {
 }
 
 function setupPlaybackControls(controls) {
+	controls.audio.addEventListener("ended", playNextSong);
 	controls.playButton.addEventListener("click", togglePause);
 	controls.prevButton.addEventListener("click", playPrevSong);
 	controls.nextButton.addEventListener("click", playNextSong);
 	controls.volumeControl.addEventListener("change", changeVolume);
+	controls.audio.addEventListener("timeupdate", function() {
+		controls.positionControl.value = controls.audio.currentTime / controls.audio.duration;
+	});
+	controls.positionControl.addEventListener("mouseup", function() {
+		controls.audio.currentTime = controls.positionControl.value * controls.audio.duration;
+		togglePause();
+	});
+	controls.positionControl.addEventListener("mousedown", function() {
+		togglePause();
+	});
 }
 
 window.addEventListener("load", function() {
-	audio = document.getElementById("audio");
-	audio.addEventListener("ended", playNextSong);
 	controls = {
+		audio: document.getElementById("audio"),
 		playButton: document.getElementById("play"),
 		prevButton: document.getElementById("prev"),
 		nextButton: document.getElementById("next"),
-		volumeControl: document.getElementById("volume-slider")
+		volumeControl: document.getElementById("volume-slider"),
+		positionControl: document.getElementById("position-slider")
 	}
 	setupPlaybackControls(controls);
 
