@@ -148,6 +148,22 @@ function changeVolume(e) {
 	audio.volume = e.target.value;
 }
 
+// Pads the whole part of a number with zeros so as to make it at least `width'
+// characters wide.
+function padNumber(number, width) {
+	var absNumber = Math.abs(number);
+	var n = width;
+	if (absNumber >= 1) {
+		n -= Math.floor(Math.log(absNumber)/Math.LN10);
+	}
+
+	var padding = "";
+	while (--n > 0) {
+		padding += "0";
+	}
+	return padding + number;
+}
+
 function setupPlaybackControls(controls) {
 	controls.audio.addEventListener("ended", playNextSong);
 	controls.playButton.addEventListener("click", togglePause);
@@ -155,13 +171,24 @@ function setupPlaybackControls(controls) {
 	controls.nextButton.addEventListener("click", playNextSong);
 	controls.volumeControl.addEventListener("change", changeVolume);
 	controls.audio.addEventListener("timeupdate", function() {
-		controls.positionControl.value = controls.audio.currentTime / controls.audio.duration;
+		controls.positionSlider.value = controls.audio.currentTime / controls.audio.duration;
+		var currentTime = Math.floor(controls.audio.currentTime);
+		var seconds = currentTime % 60;
+		var minutes = Math.floor(currentTime / 60);
+		var hours = Math.floor(currentTime / 3600);
+		if (hours) {
+			controls.currentTime.textContent = hours + ":";
+			controls.currentTime.textContent += padNumber(minutes, 2);
+		} else {
+			controls.currentTime.textContent = padNumber(minutes, 2);
+		}
+		controls.currentTime.textContent += ":" + padNumber(seconds, 2);
 	});
-	controls.positionControl.addEventListener("mouseup", function() {
-		controls.audio.currentTime = controls.positionControl.value * controls.audio.duration;
+	controls.positionSlider.addEventListener("mouseup", function() {
+		controls.audio.currentTime = controls.positionSlider.value * controls.audio.duration;
 		togglePause();
 	});
-	controls.positionControl.addEventListener("mousedown", function() {
+	controls.positionSlider.addEventListener("mousedown", function() {
 		togglePause();
 	});
 }
@@ -173,7 +200,9 @@ window.addEventListener("load", function() {
 		prevButton: document.getElementById("prev"),
 		nextButton: document.getElementById("next"),
 		volumeControl: document.getElementById("volume-slider"),
-		positionControl: document.getElementById("position-slider")
+		positionSlider: document.getElementById("position-slider"),
+		currentTime: document.getElementById("position-current"),
+		totalTime: document.getElementById("position-duration")
 	}
 	setupPlaybackControls(controls);
 
