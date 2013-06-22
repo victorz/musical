@@ -3,11 +3,11 @@ var currentSong = null;
 function loadLibraryDirectory(dir, callback, callbackArgs) {
 	if (window.XMLHttpRequest) {
 		var httpRequest = new XMLHttpRequest();
-		httpRequest.onreadystatechange = function() {
-			if (httpRequest.readyState === 4 && httpRequest.status === 200) {
-				callback(httpRequest.response, callbackArgs);
+		httpRequest.addEventListener("readystatechange", function() {
+			if (this.readyState === 4 && this.status === 200) {
+				callback(this.response, callbackArgs);
 			}
-		};
+		});
 		httpRequest.open("GET", "cgi-bin/library.py?dir=" + encodeURIComponent(dir), true);
 		httpRequest.send(null);
 	} else {
@@ -97,13 +97,13 @@ function handleJSONData(data, args) {
 }
 
 function pauseAudio() {
-	audio.pause();
+	controls.audio.pause();
 	controls.playButton.textContent = "Play";
 }
 
 function playAudio() {
-	if (audio.src) {
-		audio.play();
+	if (controls.audio.src) {
+		controls.audio.play();
 		controls.playButton.textContent = "Pause";
 	}
 }
@@ -113,13 +113,13 @@ function playFile(li) {
 		currentSong.classList.remove("playing");
 	}
 	li.classList.add("playing");
-	audio.src = "library" + li.parentNode.getAttribute("data-path") + "/" + li.textContent;
-	audio.play();
+	controls.audio.src = "library" + li.parentNode.getAttribute("data-path") + "/" + li.textContent;
+	playAudio();
 	currentSong = li;
 }
 
 function togglePause(e) {
-	if (audio.paused) {
+	if (controls.audio.paused) {
 		playAudio();
 	} else {
 		pauseAudio();
@@ -145,7 +145,7 @@ function playNextSong(e) {
 }
 
 function changeVolume(e) {
-	audio.volume = e.target.value;
+	controls.audio.volume = e.target.value;
 }
 
 // Pads the whole part of a number with zeros so as to make it at least `width'
@@ -164,32 +164,41 @@ function padNumber(number, width) {
 	return padding + number;
 }
 
+function formatTime(time) {
+	var currentTime = Math.floor(time);
+	var seconds = currentTime % 60;
+	var minutes = Math.floor(currentTime / 60);
+	var hours = Math.floor(currentTime / 3600);
+
+	var result = "";
+	if (hours) {
+		result = hours + ":";
+		result += padNumber(minutes, 2);
+	} else {
+		result = padNumber(minutes, 2);
+	}
+	return result + ":" + padNumber(seconds, 2);
+}
+
 function setupPlaybackControls(controls) {
 	controls.audio.addEventListener("ended", playNextSong);
+	controls.audio.addEventListener("durationchange", function() {
+		controls.totalTime.textContent = formatTime(controls.audio.duration);
+	});
 	controls.playButton.addEventListener("click", togglePause);
 	controls.prevButton.addEventListener("click", playPrevSong);
 	controls.nextButton.addEventListener("click", playNextSong);
 	controls.volumeControl.addEventListener("change", changeVolume);
 	controls.audio.addEventListener("timeupdate", function() {
 		controls.positionSlider.value = controls.audio.currentTime / controls.audio.duration;
-		var currentTime = Math.floor(controls.audio.currentTime);
-		var seconds = currentTime % 60;
-		var minutes = Math.floor(currentTime / 60);
-		var hours = Math.floor(currentTime / 3600);
-		if (hours) {
-			controls.currentTime.textContent = hours + ":";
-			controls.currentTime.textContent += padNumber(minutes, 2);
-		} else {
-			controls.currentTime.textContent = padNumber(minutes, 2);
-		}
-		controls.currentTime.textContent += ":" + padNumber(seconds, 2);
+		controls.currentTime.textContent = formatTime(controls.audio.currentTime);
 	});
 	controls.positionSlider.addEventListener("mouseup", function() {
 		controls.audio.currentTime = controls.positionSlider.value * controls.audio.duration;
-		togglePause();
+		playAudio();
 	});
 	controls.positionSlider.addEventListener("mousedown", function() {
-		togglePause();
+		pauseAudio();
 	});
 }
 
